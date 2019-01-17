@@ -1,0 +1,11 @@
+[package]
+name = "hlc-rs"
+version = "0.1.0"
+authors = ["Toby Sullivan <tobyjsullivan@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+futures = "0.1"
+hyper = "0.12.21"
+lazy_static = "1.2.0"
+regex = "1.1.0"
