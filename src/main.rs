@@ -46,7 +46,18 @@ fn handle_create_account(req: Request<Body>) -> BoxFut {
         let req = create::CreateRequest::from(&body);
         println!("Request: {:?}", req);
 
-        let response = Response::new(Body::from("CREATE"));
+        let response = match req {
+            Ok(req) => {
+                // TODO: Add data to store.
+                Response::new(Body::from("{}"))
+            }
+            Err(_) => {
+                let mut response = Response::new(Body::empty());
+                *response.status_mut() = StatusCode::BAD_REQUEST;
+                response
+            }
+        };
+
         future::ok(response)
     });
     Box::new(f_resp)
