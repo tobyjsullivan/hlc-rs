@@ -3,6 +3,13 @@ extern crate hyper;
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;
+extern crate serde;
+#[macro_use]
+extern crate serde_derive;
+extern crate serde_json;
+
+mod create;
+mod store;
 
 use futures::future;
 use hyper::rt::{Future, Stream};
@@ -34,8 +41,15 @@ fn handle_recommend(req: Request<Body>, acct_id: u32) -> BoxFut {
 }
 
 fn handle_create_account(req: Request<Body>) -> BoxFut {
-    let response = Response::new(Body::from("CREATE"));
-    Box::new(future::ok(response))
+    let (_parts, body) = req.into_parts();
+    let f_resp = body.concat2().and_then(|body| {
+        let req = create::CreateRequest::from(&body);
+        println!("Request: {:?}", req);
+
+        let response = Response::new(Body::from("CREATE"));
+        future::ok(response)
+    });
+    Box::new(f_resp)
 }
 
 fn handle_create_likes(req: Request<Body>) -> BoxFut {
