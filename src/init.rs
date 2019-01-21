@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Result as SResult;
-use std::fs::{read_dir, File};
+use std::fs::{read_dir, File, DirEntry};
 use std::io::BufReader;
 use std::io::{Read, Result};
 use std::path::Path;
@@ -10,8 +10,12 @@ use crate::data::Store;
 pub fn load(store: &mut Store, data_dir: &str) -> Result<()> {
     for entry in read_dir(data_dir)? {
         let entry = entry?;
-        println!("Loading {:?}", entry);
-        load_file(store, &entry.path())?;
+        let path = entry.path();
+        if path.is_dir() {
+            continue;
+        }
+        println!("Loading {:?}", path);
+        load_file(store, &path)?;
     }
 
     Ok(())
