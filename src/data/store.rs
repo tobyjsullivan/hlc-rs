@@ -16,7 +16,6 @@ impl Store {
     }
 }
 
-
 type Block = u64;
 struct IdMask {
     entries: Vec<Block>,
@@ -63,6 +62,9 @@ impl IdMask {
     }
 
     fn locate(acct_id: AccountID) -> (usize, usize) {
-        (acct_id as usize / Self::BITS_PER_BLOCK, acct_id as usize % Self::BITS_PER_BLOCK)
+        (
+            acct_id as usize / Self::BITS_PER_BLOCK,
+            acct_id as usize % Self::BITS_PER_BLOCK,
+        )
     }
 }

@@ -5,9 +5,7 @@ use std::io::BufReader;
 use std::io::{Read, Result};
 use std::path::Path;
 
-use crate::data::{
-    Store,
-};
+use crate::data::Store;
 
 pub fn load(store: &mut Store, data_dir: &str) -> Result<()> {
     for entry in read_dir(data_dir)? {

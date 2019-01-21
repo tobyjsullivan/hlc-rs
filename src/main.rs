@@ -122,7 +122,11 @@ fn main() {
     let load_start = Instant::now();
     init::load(&mut store, &data_dir).expect("Failed to load data.");
     let load_time = load_start.elapsed();
-    println!("Data loaded. {}.{} seconds", load_time.as_secs(), load_time.subsec_millis());
+    println!(
+        "Data loaded. {}.{} seconds",
+        load_time.as_secs(),
+        load_time.subsec_millis()
+    );
 
     let port = match env::var("PORT") {
         Ok(p) => p.parse::<u16>().unwrap(),
