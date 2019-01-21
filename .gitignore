@@ -1,4 +1,5 @@
-/target
-/build
-/tmp
 **/*.rs.bk
+/build
+/harness/data.zip
+/target
+/tmp

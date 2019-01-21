@@ -1,3 +1,5 @@
+DATA_FILE := ~/Downloads/test_accounts_291218\ \(1\)/data/data.zip
+
 .PHONY: start linux docker local-docker push clean
 
 start:
@@ -14,6 +16,7 @@ docker: linux
 	docker build -t hlc-rs .
 
 local-docker: docker
+	cp $(DATA_FILE) ./harness/data.zip
 	docker build -t hlc-rs-local ./harness/
 	docker run -p 8080:80 -ti hlc-rs-local
 
