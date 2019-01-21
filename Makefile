@@ -10,7 +10,7 @@ start:
 linux:
 	docker build -t hlc-rs-builder --file ./tools/builder/Dockerfile .
 	mkdir -p ./build
-	docker cp $$(docker create hlc-rs-builder):/target/release/hlc-rs ./build/linux
+	docker cp $$(docker create hlc-rs-builder):/target/x86_64-unknown-linux-musl/release/hlc-rs ./build/linux
 
 docker: linux
 	docker build -t hlc-rs .

@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/sh
 
 main() {
   local data_dir="$1"
