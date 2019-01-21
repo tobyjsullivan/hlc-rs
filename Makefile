@@ -1,4 +1,9 @@
-.PHONY: linux docker local-docker push clean
+.PHONY: start linux docker local-docker push clean
+
+start:
+	cargo build
+	rm -rf './tmp'
+	./bin/start.sh './tmp' ~/Downloads/test_accounts_291218\ \(1\)/data/data.zip target/debug/hlc-rs
 
 linux:
 	docker build -t hlc-rs-builder --file ./tools/builder/Dockerfile .

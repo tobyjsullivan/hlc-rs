@@ -8,15 +8,19 @@ extern crate serde;
 extern crate serde_derive;
 extern crate serde_json;
 
-mod create;
-mod store;
-
 use futures::future;
 use hyper::rt::{Future, Stream};
 use hyper::service::service_fn;
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
 use regex::Regex;
 use std::env;
+use std::time::{Duration, Instant};
+
+mod create;
+mod data;
+mod init;
+
+use data::Store;
 
 type BoxFut = Box<Future<Item = Response<Body>, Error = hyper::Error> + Send>;
 
@@ -112,6 +116,14 @@ fn handle_request(req: Request<Body>) -> BoxFut {
 }
 
 fn main() {
+    let data_dir = env::var("DATA_DIR").expect("DATA_DIR required.");
+    let mut store = Store::new();
+
+    let load_start = Instant::now();
+    init::load(&mut store, &data_dir).expect("Failed to load data.");
+    let load_time = load_start.elapsed();
+    println!("Data loaded. {}.{} seconds", load_time.as_secs(), load_time.subsec_millis());
+
     let port = match env::var("PORT") {
         Ok(p) => p.parse::<u16>().unwrap(),
         Err(_) => 8080,
