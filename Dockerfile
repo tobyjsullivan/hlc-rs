@@ -1,4 +1,4 @@
-FROM alpine:3.6
+FROM amd64/alpine:3.6
 
 ADD bin/start.sh start.sh
 RUN chmod u+x start.sh
