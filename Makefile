@@ -2,9 +2,8 @@
 
 linux:
 	docker build -t hlc-rs-builder --file ./tools/builder/Dockerfile .
-	docker create --name hlc-rs-builder-cont hlc-rs-builder
 	mkdir -p ./build
-	docker cp hlc-rs-builder-cont:/target/release/hlc-rs ./build/linux
+	docker cp $$(docker create hlc-rs-builder):/target/release/hlc-rs ./build/linux
 
 docker: linux
 	docker build -t hlc-rs .
