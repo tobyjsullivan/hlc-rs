@@ -48,6 +48,7 @@ pub enum ParseErr {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct CreateRequestPayload {
     id: u32,
     email: String,
@@ -66,12 +67,14 @@ struct CreateRequestPayload {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct CreateRequestPayloadPremium {
     start: Timestamp,
     finish: Timestamp,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct CreateRequestPayloadLike {
     id: u32,
     ts: Timestamp,
