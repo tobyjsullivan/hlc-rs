@@ -9,6 +9,7 @@ extern crate serde_derive;
 extern crate serde_json;
 
 use futures::future;
+use futures::future::{FutureResult, Map};
 use hyper::rt::{Future, Stream};
 use hyper::service::service_fn;
 use hyper::{Body, Method, Request, Response, Server, StatusCode};
@@ -64,6 +65,7 @@ fn handle_create_account(req: Request<Body>) -> BoxFut {
 
         future::ok(response)
     });
+
     Box::new(f_resp)
 }
 
@@ -75,6 +77,15 @@ fn handle_create_likes(req: Request<Body>) -> BoxFut {
 fn handle_update_account(req: Request<Body>, acct_id: u32) -> BoxFut {
     let response = Response::new(Body::from(format!("UPDATE({})", acct_id)));
     Box::new(future::ok(response))
+}
+
+fn handle_wrap(req: Request<Body>) -> BoxFut {
+    let f = future::ok(req);
+    Box::new(f.and_then(handle_request).and_then(move |mut res| {
+        res.headers_mut().insert("Server", "tobys-hlc2018/1.0-alpha".parse().unwrap());
+        res.headers_mut().insert("Content-Type", "application/json".parse().unwrap());
+        future::ok(res)
+    }))
 }
 
 fn handle_request(req: Request<Body>) -> BoxFut {
@@ -140,7 +151,7 @@ fn main() {
     // creates one from our `hello_world` function.
     let new_svc = || {
         // service_fn_ok converts our function into a `Service`
-        service_fn(handle_request)
+        service_fn(handle_wrap)
     };
 
     let server = Server::bind(&addr)
