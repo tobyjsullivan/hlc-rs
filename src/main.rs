@@ -19,6 +19,7 @@ use std::time::{Duration, Instant};
 
 mod create;
 mod data;
+mod filter;
 mod init;
 
 use data::Store;

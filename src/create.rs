@@ -1,9 +1,11 @@
-use serde::{Deserialize, Serialize};
-use serde_json::Result as SResult;
+use crate::data::{
+    AccountID,
+    Timestamp,
+};
 
 #[derive(Debug)]
 pub struct CreateRequest {
-    id: u32,
+    id: AccountID,
     email: String,
     fname: Option<String>,
     sname: Option<String>,
@@ -47,39 +49,6 @@ pub enum ParseErr {
     JsonError { cause: serde_json::Error },
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct CreateRequestPayload {
-    id: u32,
-    email: String,
-    fname: Option<String>,
-    sname: Option<String>,
-    phone: Option<String>,
-    sex: String,
-    birth: Timestamp,
-    country: Option<String>,
-    city: Option<String>,
-    joined: Timestamp,
-    status: String,
-    interests: Vec<String>,
-    premium: Option<CreateRequestPayloadPremium>,
-    likes: Vec<CreateRequestPayloadLike>,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct CreateRequestPayloadPremium {
-    start: Timestamp,
-    finish: Timestamp,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
-struct CreateRequestPayloadLike {
-    id: u32,
-    ts: Timestamp,
-}
-
 impl CreateRequest {
     pub fn from(data: &[u8]) -> Result<CreateRequest, ParseErr> {
         let payload: CreateRequestPayload = serde_json::from_slice(data)?;
@@ -92,8 +61,6 @@ impl From<serde_json::Error> for ParseErr {
         ParseErr::JsonError { cause: err }
     }
 }
-
-pub type Timestamp = u64;
 
 #[derive(Debug)]
 pub enum Sex {
@@ -132,7 +99,7 @@ impl From<CreateRequestPayloadPremium> for Premium {
 
 #[derive(Debug)]
 pub struct Like {
-    id: u32,
+    id: AccountID,
     ts: Timestamp,
 }
 
@@ -162,4 +129,37 @@ fn parse_status(s: String) -> Result<Status, ParseErr> {
         "всё сложно" => Ok(Status::ItsComplicated),
         _ => Err(ParseErr::InvalidStatus),
     }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CreateRequestPayload {
+    id: AccountID,
+    email: String,
+    fname: Option<String>,
+    sname: Option<String>,
+    phone: Option<String>,
+    sex: String,
+    birth: Timestamp,
+    country: Option<String>,
+    city: Option<String>,
+    joined: Timestamp,
+    status: String,
+    interests: Vec<String>,
+    premium: Option<CreateRequestPayloadPremium>,
+    likes: Vec<CreateRequestPayloadLike>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CreateRequestPayloadPremium {
+    start: Timestamp,
+    finish: Timestamp,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CreateRequestPayloadLike {
+    id: AccountID,
+    ts: Timestamp,
 }

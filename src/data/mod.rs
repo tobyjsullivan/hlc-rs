@@ -1,5 +1,6 @@
-mod account;
 mod store;
 
-pub use account::AccountID;
 pub use store::Store;
+
+pub type AccountID = u32;
+pub type Timestamp = u64;
