@@ -82,8 +82,10 @@ fn handle_update_account(req: Request<Body>, acct_id: u32) -> BoxFut {
 fn handle_wrap(req: Request<Body>) -> BoxFut {
     let f = future::ok(req);
     Box::new(f.and_then(handle_request).and_then(move |mut res| {
-        res.headers_mut().insert("Server", "tobys-hlc2018/1.0-alpha".parse().unwrap());
-        res.headers_mut().insert("Content-Type", "application/json".parse().unwrap());
+        res.headers_mut()
+            .insert("Server", "tobys-hlc2018/1.0-alpha".parse().unwrap());
+        res.headers_mut()
+            .insert("Content-Type", "application/json".parse().unwrap());
         future::ok(res)
     }))
 }
