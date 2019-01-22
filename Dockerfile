@@ -1,4 +1,4 @@
-FROM amd64/alpine:3.6
+FROM alpine:3.6
 
 ADD bin/start.sh start.sh
 RUN chmod +x start.sh
@@ -9,4 +9,4 @@ EXPOSE 80
 
 ENV PORT 80
 
-CMD ["sh", "./start.sh", "/tmp", "/tmp/data/data.zip", "./linux"]
+ENTRYPOINT ["sh", "./start.sh", "/tmp", "/tmp/data/data.zip", "./linux"]

@@ -81,6 +81,8 @@ fn handle_update_account(req: Request<Body>, acct_id: u32) -> BoxFut {
 }
 
 fn handle_wrap(req: Request<Body>) -> BoxFut {
+    println!("received: {} {}", req.method(), req.uri());
+
     let f = future::ok(req);
     Box::new(f.and_then(handle_request).and_then(move |mut res| {
         res.headers_mut()
@@ -148,7 +150,7 @@ fn main() {
     };
 
     // This is our socket address...
-    let addr = ([127, 0, 0, 1], port).into();
+    let addr = ([0, 0, 0, 0], port).into();
 
     // A `Service` is needed for every connection, so this
     // creates one from our `hello_world` function.
@@ -162,6 +164,6 @@ fn main() {
         .map_err(|e| eprintln!("server error: {}", e));
 
     // Run this server for... forever!
-    println!("Starting server on port {}", port);
+    println!("Starting server on {}", addr);
     hyper::rt::run(server);
 }
