@@ -21,6 +21,13 @@ pub struct CreateRequest {
     likes: Vec<Like>,
 }
 
+impl CreateRequest {
+    pub fn from(data: &[u8]) -> Result<CreateRequest, ParseErr> {
+        let payload: CreateRequestPayload = serde_json::from_slice(data)?;
+        payload.into()
+    }
+}
+
 impl From<CreateRequestPayload> for Result<CreateRequest, ParseErr> {
     fn from(payload: CreateRequestPayload) -> Result<CreateRequest, ParseErr> {
         Ok(CreateRequest {
@@ -47,13 +54,6 @@ pub enum ParseErr {
     InvalidSex,
     InvalidStatus,
     JsonError { cause: serde_json::Error },
-}
-
-impl CreateRequest {
-    pub fn from(data: &[u8]) -> Result<CreateRequest, ParseErr> {
-        let payload: CreateRequestPayload = serde_json::from_slice(data)?;
-        payload.into()
-    }
 }
 
 impl From<serde_json::Error> for ParseErr {

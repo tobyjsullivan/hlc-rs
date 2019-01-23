@@ -7,6 +7,7 @@ extern crate serde;
 #[macro_use]
 extern crate serde_derive;
 extern crate serde_json;
+extern crate url;
 
 use futures::future;
 use futures::future::{FutureResult, Map};
@@ -19,6 +20,7 @@ use std::time::{Duration, Instant};
 
 mod create;
 mod data;
+mod error;
 mod filter;
 mod init;
 
@@ -27,8 +29,29 @@ use data::Store;
 type BoxFut = Box<Future<Item = Response<Body>, Error = hyper::Error> + Send>;
 
 fn handle_filter(req: Request<Body>) -> BoxFut {
-    let response = Response::new(Body::from("FILTER"));
-    Box::new(future::ok(response))
+    let f = future::ok(req);
+
+    let f_resp = f.map(|req| {
+        match filter::FilterRequest::resolve(req.uri().to_string().as_ref()) {
+            Ok(resp) => {
+                // TODO
+                Response::new(Body::empty())
+            },
+            Err(error::RequestError::BadRequest) => {
+                let mut response = Response::new(Body::empty());
+                *response.status_mut() = StatusCode::BAD_REQUEST;
+                response
+            }
+            Err(error::RequestError::NotFound) => {
+                let mut response = Response::new(Body::empty());
+                *response.status_mut() = StatusCode::NOT_FOUND;
+                response
+            }
+        }
+
+    });
+
+    Box::new(f_resp)
 }
 
 fn handle_group(req: Request<Body>) -> BoxFut {

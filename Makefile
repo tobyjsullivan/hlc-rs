@@ -1,11 +1,11 @@
-DATA_FILE := ~/Downloads/test_accounts_291218\ \(1\)/data/data.zip
+DATA_FILE := ~/Downloads/test_accounts_291218/data/data.zip
 
 .PHONY: start linux docker local-docker push clean
 
 start:
 	cargo build
 	rm -rf './tmp'
-	sh ./bin/start.sh './tmp' ~/Downloads/test_accounts_291218\ \(1\)/data/data.zip target/debug/hlc-rs
+	sh ./bin/start.sh './tmp' $(DATA_FILE) target/debug/hlc-rs
 
 linux:
 	docker build -t hlc-rs-builder --file ./tools/builder/Dockerfile .
